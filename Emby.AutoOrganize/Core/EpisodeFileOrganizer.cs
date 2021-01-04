@@ -240,13 +240,13 @@ namespace Emby.AutoOrganize.Core
                 }
                 else if (groupedResult.Count > 1)
                 {
-                    var filtredResult = groupedResult
+                    var filteredResult = groupedResult
                         .Select(i => new { Ref = i, Score = NameUtils.GetMatchScore(seriesName, seriesYear, i.Key.Name, i.Key.ProductionYear) })
                         .Where(i => i.Score > 0)
                         .OrderByDescending(i => i.Score)
                         .Select(i => i.Ref)
                         .FirstOrDefault();
-                    finalResult = filtredResult?.Result.First();
+                    finalResult = filteredResult?.Result.First();
                 }
 
                 if (finalResult != null)
@@ -374,7 +374,7 @@ namespace Emby.AutoOrganize.Core
             int? seriesYear,
             int? seasonNumber,
             int? episodeNumber,
-            int? endingEpiosdeNumber,
+            int? endingEpisodeNumber,
             DateTime? premiereDate,
             TvFileOrganizationOptions options,
             bool rememberCorrection,
@@ -402,7 +402,7 @@ namespace Emby.AutoOrganize.Core
                 series,
                 seasonNumber,
                 episodeNumber,
-                endingEpiosdeNumber,
+                endingEpisodeNumber,
                 premiereDate,
                 options,
                 rememberCorrection,
@@ -418,7 +418,7 @@ namespace Emby.AutoOrganize.Core
             Series series,
             int? seasonNumber,
             int? episodeNumber,
-            int? endingEpiosdeNumber,
+            int? endingEpisodeNumber,
             DateTime? premiereDate,
             TvFileOrganizationOptions options,
             bool rememberCorrection,
@@ -429,7 +429,7 @@ namespace Emby.AutoOrganize.Core
                 series,
                 seasonNumber,
                 episodeNumber,
-                endingEpiosdeNumber,
+                endingEpisodeNumber,
                 result,
                 premiereDate,
                 cancellationToken).ConfigureAwait(false);
@@ -765,7 +765,7 @@ namespace Emby.AutoOrganize.Core
             Series series,
             int? seasonNumber,
             int? episodeNumber,
-            int? endingEpiosdeNumber,
+            int? endingEpisodeNumber,
             FileOrganizationResult result,
             DateTime? premiereDate,
             CancellationToken cancellationToken)
@@ -774,13 +774,13 @@ namespace Emby.AutoOrganize.Core
                 .GetRecursiveChildren().OfType<Episode>()
                 .FirstOrDefault(e => e.ParentIndexNumber == seasonNumber
                         && e.IndexNumber == episodeNumber
-                        && e.IndexNumberEnd == endingEpiosdeNumber
+                        && e.IndexNumberEnd == endingEpisodeNumber
                         && e.LocationType == LocationType.FileSystem
                         && Path.GetExtension(e.Path) == Path.GetExtension(result.OriginalPath));
 
             if (episode == null)
             {
-                return await CreateNewEpisode(series, seasonNumber, episodeNumber, endingEpiosdeNumber, premiereDate, cancellationToken).ConfigureAwait(false);
+                return await CreateNewEpisode(series, seasonNumber, episodeNumber, endingEpisodeNumber, premiereDate, cancellationToken).ConfigureAwait(false);
             }
 
             return episode;
@@ -871,7 +871,7 @@ namespace Emby.AutoOrganize.Core
         private string GetSeriesDirectoryName(Series series, TvFileOrganizationOptions options)
         {
             var seriesName = series.Name;
-            var serieYear = series.ProductionYear;
+            var seriesYear = series.ProductionYear;
             var seriesFullName = seriesName;
             if (series.ProductionYear.HasValue)
             {
@@ -882,7 +882,7 @@ namespace Emby.AutoOrganize.Core
                 Replace("%sn", seriesName, StringComparison.Ordinal)
                 .Replace("%s.n", seriesName.Replace(' ', '.'), StringComparison.Ordinal)
                 .Replace("%s_n", seriesName.Replace(' ', '_'), StringComparison.Ordinal)
-                .Replace("%sy", serieYear.ToString(), StringComparison.Ordinal)
+                .Replace("%sy", seriesYear.ToString(), StringComparison.Ordinal)
                 .Replace("%fn", seriesFullName, StringComparison.Ordinal);
 
             return _fileSystem.GetValidFilename(seasonFolderName);
